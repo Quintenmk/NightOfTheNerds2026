@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Test Upload</h2>
+
+<input type="file" id="fileInput">
+<button onclick="send()">Send</button>
+
+<script>
+async function send() {
+  const file = document.getElementById("fileInput").files[0]
+
+  const formData = new FormData()
+  formData.append("photo", file)
+  formData.append("prompt", "Test prompt from frontend")
+
+
+
+  const res = await fetch("http://localhost:5000/api/submit", {
+    method: "POST",
+    body: formData
+  })
+
+  const data = await res.json()
+  console.log(data)
+  alert(JSON.stringify(data))
+}
+</script>
+
+</body>
+</html>
