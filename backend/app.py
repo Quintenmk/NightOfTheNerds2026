@@ -12,6 +12,7 @@ load_dotenv()
 PORTKEY_API_KEY = os.getenv("PORTKEY_API_KEY")
 PORTKEY_MODEL = os.getenv("PORTKEY_MODEL", "google/gemini-1.5-image")
 PORTKEY_URL = os.getenv("PORTKEY_URL", "https://api.portkey.ai/v1/chat/completions")
+FAKE_MODE = os.getenv("FAKE_MODE", "true").lower() == "true"
 
 app = Flask(__name__)
 CORS(app)
@@ -111,6 +112,21 @@ def submit():
         
         upload_path = UPLOAD_DIR / f"{job_id}.png"
         photo.save(upload_path)
+
+        # FAKE MODE: use a test image instead of calling the real API
+        if FAKE_MODE:
+            result_name = "test_result.png"
+
+            jobs[job_id] = {
+                "status": "done",
+                "image_url": f"/media/{result_name}"
+            }
+
+            return jsonify(
+                job_id=job_id,
+                status="done",
+                image_url=f"/media/{result_name}"
+            )
         
         out_bytes = generate_image_portkey(prompt, upload_path)
         
