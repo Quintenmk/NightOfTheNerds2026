@@ -2,170 +2,191 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Movie Scene Builder</title>
   <link rel="stylesheet" href="style.css" />
 </head>
- 
+
 <body>
+  <div class="container start-screen" id="screenStart">
+    <div class="start-content">
+      <img src="assets/hlopalka.png" class="clapperboard-behind" alt="Clapperboard">
 
- <!-- START SCREEN -->
-<div class="container start-screen" id="screenStart">
-  <div class="start-content">
+      <h1 class="hero-title">
+        <span class="title-white">BECOME</span>
+        <span class="title-gold">A MOVIE</span>
+        <span class="title-gold">CHARACTER</span>
+      </h1>
 
-    <img src="assets/hlopalka.png" class="clapperboard-behind" alt="Clapperboard">
-
-    <!-- Later you can add the clapperboard here -->
-    <!-- <img src="assets/clapperboard.png" class="clapperboard" alt="Clapperboard"> -->
-
-    <h1 class="hero-title">
-      <span class="title-white">BECOME</span>
-      <span class="title-gold">A MOVIE</span>
-      <span class="title-gold">CHARACTER</span>
-    </h1>
-
-    <p class="hero-subtitle">
-      Take a photo, answer a few questions,<br>
-      AI will turn you into a movie-style character!
-    </p>
-
-    <button id="buttonStart" class="start-button">
-      START <span>→</span>
-    </button>
-  </div>
-</div>
-
-<!-- CAMERA SCREEN -->
-<div class="container hidden" id="screenCamera">
-  <h1 class="CameraText">Take your photo</h1>
-  <h2>Make sure your face is visible</h2>
-  <video id="videoLive" autoplay playsinline></video><br>
-  <button id="buttonTake">Take Photo</button>
-</div>
- 
-<!-- CONFIRM PHOTO SCREEN -->
-<div class="container hidden" id="screenConfirm">
-  <h1>Confirm Photo?</h1>
-  <img id="photoPreview" style="width:300px;height:300px;border-radius:50%;object-fit:cover;margin-bottom:20px;"><br>
-  <button id="buttonYes">Yes</button>
-  <button id="buttonNo">No</button>
-</div>
- 
-<!-- WEAPON SCREEN -->
-<div class="container hidden" id="screenWeapon">
-  <h1>What kind of fighting style do you have?</h1>
-  <div class="grid">
-    <div class="optionContainer" data-choice="weapon" data-value="sword">
-      <p class="option">
-        As a powerful warrior, that chooses to face his enemies head-on
+      <p class="hero-subtitle">
+        Take a photo, answer a few questions,<br>
+        AI will turn you into a movie-style character!
       </p>
-    </div>
- 
-    <div class="optionContainer" data-choice="weapon" data-value="gun">
-      <p class="option">
-        Showing no remorse, you want to annihilate your targets as quickly as possible
-      </p>
-    </div>
- 
-    <div class="optionContainer" data-choice="weapon" data-value="lightsaber and the force">
-      <p class="option">
-        Because of your interest in sci-fi, you got inspiration from a famous space movie with jedi's to fight your foes
-      </p>
-    </div>
- 
-    <div class="optionContainer" data-choice="weapon" data-value="bow">
-      <p class="option">
-        You fight with caution, keeping your enemies at a distance, and using your ranged expertise to eliminate them
-      </p>
-    </div>
-  </div>
-  <button id="btnWeapon" disabled>Next</button>
-</div>
- 
-<!-- THEME SCREEN -->
-<div class="container hidden" id="screenTheme">
-  <h1>Which location would describe your aesthetic?</h1>
-  <div class="grid">
-    <div class="optionContainer" data-choice="theme" data-value="Fairytale">
-      <p class="option">A peaceful forest, with fairy's flying around and birds singing</p>
-    </div>
- 
-    <div class="optionContainer" data-choice="theme" data-value="Fantasy">
-      <p class="option">Soaring through the sky, amongst unicorns and dragons</p>
-    </div>
- 
-    <div class="optionContainer" data-choice="theme" data-value="Action">
-      <p class="option">You prefer the city life, with bustling streets and a vibrant, energetic atmosphere</p>
-    </div>
- 
-    <div class="optionContainer" data-choice="theme" data-value="Underwater">
-      <p class="option">Escaping the ordinary life, you choose to swim beside fish and mermaids</p>
-    </div>
-  </div>
-  <button id="btnTheme" disabled>Next</button>
-</div>
- 
-<!-- OUTFIT SCREEN -->
-<div class="container hidden" id="screenOutfit">
-  <h1>If you would appear in public as a hero, how will you dress yourself</h1>
-  <div class="grid">
-    <div class="optionContainer" data-choice="outfit" data-value="Hooded outfit">
-      <p class="option">Mysterious and ominous</p>
-    </div>
- 
-    <div class="optionContainer" data-choice="outfit" data-value="Superhero cape, with muscles">
-      <p class="option">Strong, brave and charming</p>
-    </div>
- 
-    <div class="optionContainer" data-choice="outfit" data-value="Futuristic suit with technology">
-      <p class="option">Futuristic and geared up with technology</p>
-    </div>
- 
-    <div class="optionContainer" data-choice="outfit" data-value="Suit with tie, and brown trousers">
-      <p class="option">Ordinary, blending in with the rest</p>
-    </div>
-  </div>
-  <button id="btnOutfit" disabled>Next</button>
-</div>
- 
-<!-- SIDEKICK SCREEN -->
-<div class="container hidden" id="screenSidekick">
-  <h1>What animal would be your ideal sidekick</h1>
-  <div class="grid">
-    <div class="optionContainer" data-choice="sidekick" data-value="Eagle">
-      <p class="option">An eagle, that can fly you around and peck enemies</p>
-    </div>
- 
-    <div class="optionContainer" data-choice="sidekick" data-value="Wolf">
-      <p class="option">A wolf, which can chomp enemies and trace every sense of life</p>
-    </div>
- 
-    <div class="optionContainer" data-choice="sidekick" data-value="Snake">
-      <p class="option">A snake, who stays close to you and keeps enemies on distance with his scary fangs</p>
-    </div>
- 
-    <div class="optionContainer" data-choice="sidekick" data-value="Horse">
-      <p class="option">A horse, to traverse the world elegantly and show your pride</p>
-    </div>
-  </div>
-  <button id="btnSidekick" disabled>Next</button>
-</div>
- 
-<!-- RESULT SCREEN -->
-<div class="container hidden" id="screenResult">
-  <h1>Your Movie Character</h1>
-  <div id="statusText">Generating your cinematic scene...</div>
-  <div id="loadingSpinner" class="loading-spinner"></div>
 
-  <canvas id="revealCanvas" style="display:none;"></canvas>
-  <img id="resultImage" style="display:none;" alt="Generated movie scene">
-
-    <div class="action-buttons" style="display:none;" id="actionButtons">
-    <button onclick="downloadImage()">Download Image</button>
-    <button onclick="startOver()">Create Another</button>
+      <button id="buttonStart" class="start-button">
+        START <span>&rarr;</span>
+      </button>
+    </div>
   </div>
-</div>
- 
-<script src="main.js"></script>
+
+  <div class="container hidden" id="screenCamera">
+    <div class="screen-content camera-content">
+      <p class="screen-kicker">Casting call</p>
+      <h1 class="screen-title CameraText">Take your photo</h1>
+      <h2 class="screen-subtitle">Make sure your face is visible</h2>
+      <div class="camera-frame">
+        <video id="videoLive" autoplay playsinline></video>
+      </div>
+      <button id="buttonTake">Take Photo</button>
+    </div>
+  </div>
+
+  <div class="container hidden" id="screenConfirm">
+    <div class="screen-content camera-content">
+      <p class="screen-kicker">Final frame</p>
+      <h1 class="screen-title">Confirm Photo?</h1>
+      <img id="photoPreview" class="photo-preview" alt="Captured photo">
+      <div class="button-row">
+        <button id="buttonYes">Yes</button>
+        <button id="buttonNo" class="secondary-button">No</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container hidden" id="screenWeapon">
+    <div class="screen-content">
+      <p class="screen-kicker">Scene 1 of 4</p>
+      <h1 class="screen-title">What kind of fighting style do you have?</h1>
+      <div class="grid">
+        <div class="optionContainer" data-choice="weapon" data-value="sword">
+          <h3>Sword</h3>
+          <p class="option">As a powerful warrior, that chooses to face his enemies head-on</p>
+        </div>
+
+        <div class="optionContainer" data-choice="weapon" data-value="gun">
+          <h3>Blaster</h3>
+          <p class="option">Showing no remorse, you want to annihilate your targets as quickly as possible</p>
+        </div>
+
+        <div class="optionContainer" data-choice="weapon" data-value="lightsaber and the force">
+          <h3>Force</h3>
+          <p class="option">Because of your interest in sci-fi, you got inspiration from a famous space movie with jedi's to fight your foes</p>
+        </div>
+
+        <div class="optionContainer" data-choice="weapon" data-value="bow">
+          <h3>Bow</h3>
+          <p class="option">You fight with caution, keeping your enemies at a distance, and using your ranged expertise to eliminate them</p>
+        </div>
+      </div>
+      <button id="btnWeapon" disabled>Next</button>
+    </div>
+  </div>
+
+  <div class="container hidden" id="screenTheme">
+    <div class="screen-content">
+      <p class="screen-kicker">Scene 2 of 4</p>
+      <h1 class="screen-title">Which location would describe your aesthetic?</h1>
+      <div class="grid">
+        <div class="optionContainer" data-choice="theme" data-value="Fairytale">
+          <h3>Fairytale</h3>
+          <p class="option">A peaceful forest, with fairy's flying around and birds singing</p>
+        </div>
+
+        <div class="optionContainer" data-choice="theme" data-value="Fantasy">
+          <h3>Fantasy</h3>
+          <p class="option">Soaring through the sky, amongst unicorns and dragons</p>
+        </div>
+
+        <div class="optionContainer" data-choice="theme" data-value="Action">
+          <h3>Action</h3>
+          <p class="option">You prefer the city life, with bustling streets and a vibrant, energetic atmosphere</p>
+        </div>
+
+        <div class="optionContainer" data-choice="theme" data-value="Underwater">
+          <h3>Underwater</h3>
+          <p class="option">Escaping the ordinary life, you choose to swim beside fish and mermaids</p>
+        </div>
+      </div>
+      <button id="btnTheme" disabled>Next</button>
+    </div>
+  </div>
+
+  <div class="container hidden" id="screenOutfit">
+    <div class="screen-content">
+      <p class="screen-kicker">Scene 3 of 4</p>
+      <h1 class="screen-title">If you would appear in public as a hero, how will you dress yourself?</h1>
+      <div class="grid">
+        <div class="optionContainer" data-choice="outfit" data-value="Hooded outfit">
+          <h3>Hooded</h3>
+          <p class="option">Mysterious and ominous</p>
+        </div>
+
+        <div class="optionContainer" data-choice="outfit" data-value="Superhero cape, with muscles">
+          <h3>Cape</h3>
+          <p class="option">Strong, brave and charming</p>
+        </div>
+
+        <div class="optionContainer" data-choice="outfit" data-value="Futuristic suit with technology">
+          <h3>Tech Suit</h3>
+          <p class="option">Futuristic and geared up with technology</p>
+        </div>
+
+        <div class="optionContainer" data-choice="outfit" data-value="Suit with tie, and brown trousers">
+          <h3>Undercover</h3>
+          <p class="option">Ordinary, blending in with the rest</p>
+        </div>
+      </div>
+      <button id="btnOutfit" disabled>Next</button>
+    </div>
+  </div>
+
+  <div class="container hidden" id="screenSidekick">
+    <div class="screen-content">
+      <p class="screen-kicker">Scene 4 of 4</p>
+      <h1 class="screen-title">What animal would be your ideal sidekick?</h1>
+      <div class="grid">
+        <div class="optionContainer" data-choice="sidekick" data-value="Eagle">
+          <h3>Eagle</h3>
+          <p class="option">An eagle, that can fly you around and peck enemies</p>
+        </div>
+
+        <div class="optionContainer" data-choice="sidekick" data-value="Wolf">
+          <h3>Wolf</h3>
+          <p class="option">A wolf, which can chomp enemies and trace every sense of life</p>
+        </div>
+
+        <div class="optionContainer" data-choice="sidekick" data-value="Snake">
+          <h3>Snake</h3>
+          <p class="option">A snake, who stays close to you and keeps enemies on distance with his scary fangs</p>
+        </div>
+
+        <div class="optionContainer" data-choice="sidekick" data-value="Horse">
+          <h3>Horse</h3>
+          <p class="option">A horse, to traverse the world elegantly and show your pride</p>
+        </div>
+      </div>
+      <button id="btnSidekick" disabled>Next</button>
+    </div>
+  </div>
+
+  <div class="container hidden" id="screenResult">
+    <div class="screen-content result-content">
+      <p class="screen-kicker">Premiere night</p>
+      <h1 class="screen-title">Your Movie Character</h1>
+      <div class="result-stage">
+        <div id="statusText">Generating your cinematic scene...</div>
+        <div id="loadingSpinner" class="loading-spinner"></div>
+        <canvas id="revealCanvas" style="display:none;"></canvas>
+        <img id="resultImage" style="display:none;" alt="Generated movie scene">
+      </div>
+
+      <div class="action-buttons" style="display:none;" id="actionButtons">
+        <button onclick="downloadImage()">Download Image</button>
+        <button onclick="startOver()" class="secondary-button">Create Another</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
 </body>
 </html>

@@ -7,18 +7,21 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = BASE_DIR.parent
+
+load_dotenv(PROJECT_DIR / ".env")
+load_dotenv(BASE_DIR / ".env")
 
 PORTKEY_API_KEY = os.getenv("PORTKEY_API_KEY")
 PORTKEY_MODEL = os.getenv("PORTKEY_MODEL", "google/gemini-1.5-image")
 PORTKEY_URL = os.getenv("PORTKEY_URL", "https://api.portkey.ai/v1/chat/completions")
-FAKE_MODE = os.getenv("FAKE_MODE", "true").lower() == "true"
+FAKE_MODE = os.getenv("FAKE_MODE", "false").lower() == "true"
 
 app = Flask(__name__)
 CORS(app)
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
 
-BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_DIR = BASE_DIR / "uploads"
 RESULT_DIR = BASE_DIR / "results"
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -27,6 +30,9 @@ RESULT_DIR.mkdir(exist_ok=True)
 jobs = {}
 
 def _portkey_headers():
+    if not PORTKEY_API_KEY:
+        raise RuntimeError("Missing PORTKEY_API_KEY in .env")
+
     return {
         "Content-Type": "application/json",
         "x-portkey-api-key": PORTKEY_API_KEY,
@@ -103,11 +109,29 @@ def generate_image_portkey(prompt, input_image_path):
 def media(filename):
     return send_from_directory(RESULT_DIR, filename)
 
+@app.route("/")
+def index():
+    return send_from_directory(PROJECT_DIR, "index.html")
+
+@app.route("/<path:filename>")
+def frontend(filename):
+    return send_from_directory(PROJECT_DIR, filename)
+
+@app.get("/api/status/<job_id>")
+def status(job_id):
+    return jsonify(jobs.get(job_id, {"status": "unknown"}))
+
 @app.post("/api/submit")
 def submit():
     try:
+        if "photo" not in request.files:
+            return jsonify(error="Missing uploaded photo"), 400
+
         photo = request.files["photo"]
-        prompt = request.form.get("prompt")
+        prompt = request.form.get("prompt", "").strip()
+        if not prompt:
+            return jsonify(error="Missing prompt"), 400
+
         job_id = str(uuid.uuid4())
         
         upload_path = UPLOAD_DIR / f"{job_id}.png"

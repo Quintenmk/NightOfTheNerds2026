@@ -6,9 +6,11 @@ console.log("PAGE LOADED", new Date().toISOString());
   let chosenOutfit = "";
   let chosenSidekick = "";
   let isGenerating = false;
+  let cameraStream = null;
  
   // ELEMENTS
   const video = document.getElementById('videoLive');
+  const screenStart = document.getElementById('screenStart');
   const screenCamera = document.getElementById('screenCamera');
   const screenConfirm = document.getElementById('screenConfirm');
   const screenWeapon = document.getElementById('screenWeapon');
@@ -17,6 +19,7 @@ console.log("PAGE LOADED", new Date().toISOString());
   const screenSidekick = document.getElementById('screenSidekick');
   const screenResult = document.getElementById('screenResult');
  
+  const buttonStart = document.getElementById('buttonStart');
   const photoPreview = document.getElementById('photoPreview');
   const buttonTake = document.getElementById('buttonTake');
   const buttonYes = document.getElementById('buttonYes');
@@ -32,14 +35,22 @@ console.log("PAGE LOADED", new Date().toISOString());
   // CAMERA INIT
   async function initCamera() {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      video.srcObject = stream;
+      if (cameraStream) return;
+
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = cameraStream;
     } catch (error) {
       console.error("Camera error:", error);
       alert("Unable to access camera. Please ensure you've granted camera permissions.");
     }
   }
-  initCamera();
+
+  // START SCREEN
+  buttonStart.addEventListener('click', async () => {
+    screenStart.classList.add('hidden');
+    screenCamera.classList.remove('hidden');
+    await initCamera();
+  });
  
   // TAKE PHOTO
   buttonTake.addEventListener('click', () => {
@@ -375,7 +386,7 @@ blockbuster film quality, 4K, shallow depth of field, epic atmosphere.`;
       formData.append("photo", blob, "capture.png");
       formData.append("prompt", prompt);
  
-      const apiResponse = await fetch("http://localhost:5000/api/submit", {
+      const apiResponse = await fetch("/api/submit", {
         method: "POST",
         body: formData
       });
@@ -397,7 +408,7 @@ blockbuster film quality, 4K, shallow depth of field, epic atmosphere.`;
         return;
       }
  
-      const finalImageUrl = "http://localhost:5000" + data.image_url;
+      const finalImageUrl = data.image_url;
 
       statusText.innerText = "Preparing your movie character...";
       loadingSpinner.style.display = "none";
