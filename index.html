@@ -4,156 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Movie Scene Builder</title>
- 
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 20px 20px 40px 20px;  
-      font-family: "ITC Avant Garde Gothic", "Avant Garde", "Century Gothic", Arial, sans-serif;
-      background-color: #fffae0;
-    }
- 
-    .optionContainer {
-      border-style: double;
-      border-radius: 8px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      cursor: pointer;
-      height: 100%;
-      background-color: #000080;
-      transition: background-color 0.3s ease;
-    }
- 
-    .optionContainer.selected {
-      background-color: #FFD700;
-    }
- 
-    .optionContainer.selected p {
-      color: #000080;
-      text-shadow: none;
-    }
- 
-    .CameraText, .container {
-      text-align: center;
-    }
- 
-    p.optionContainer,
-    p.option {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      text-shadow: 2px 2px 4px #000000;
-    }
- 
-    p {
-      color: #ffffff;
-      font-size: large;
-    }
- 
-    h1, h2 {
-      color: #000080;
-    }
- 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 480px);
-      grid-template-rows: repeat(2, 240px);
-      gap: 60px;
-      justify-content: center;
-      margin-bottom: 30px;
-    }
- 
-    video {
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 20px;
-    }
- 
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 8px;
-      margin: 5px;
-      background-color: #000080;
-      color: white;
-      border: 2px solid #000080;
-      transition: background-color 0.3s ease;
-    }
- 
-    button:hover:not(:disabled) {
-      background-color: #FFD700;
-      color: #000080;
-    }
- 
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
- 
-    .hidden {
-      display: none;
-    }
- 
-    /* Result screen styling */
-    #resultImage {
-      max-width: 800px;
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      margin: 20px auto;
-      display: block;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
- 
-    #statusText {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #000080;
-      font-weight: bold;
-    }
- 
-    .loading-spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #000080;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-    }
- 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
- 
-    .action-buttons {
-      margin-top: 20px;
-    }
- 
-    .action-buttons button {
-      margin: 0 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
  
 <body>
- 
+
+ <!-- START SCREEN -->
+<div class="container start-screen" id="screenStart">
+  <div class="start-content">
+
+    <img src="assets/hlopalka.png" class="clapperboard-behind" alt="Clapperboard">
+
+    <!-- Later you can add the clapperboard here -->
+    <!-- <img src="assets/clapperboard.png" class="clapperboard" alt="Clapperboard"> -->
+
+    <h1 class="hero-title">
+      <span class="title-white">BECOME</span>
+      <span class="title-gold">A MOVIE</span>
+      <span class="title-gold">CHARACTER</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Take a photo, answer a few questions,<br>
+      AI will turn you into a movie-style character!
+    </p>
+
+    <button id="buttonStart" class="start-button">
+      START <span>→</span>
+    </button>
+  </div>
+</div>
+
 <!-- CAMERA SCREEN -->
-<div class="container" id="screenCamera">
-  <h1 class="CameraText">What kind of movie character are you?</h1>
-  <h2>Take your picture and fill in the test to find out</h2>
+<div class="container hidden" id="screenCamera">
+  <h1 class="CameraText">Take your photo</h1>
+  <h2>Make sure your face is visible</h2>
   <video id="videoLive" autoplay playsinline></video><br>
   <button id="buttonTake">Take Photo</button>
 </div>
@@ -271,279 +156,16 @@
   <h1>Your Movie Character</h1>
   <div id="statusText">Generating your cinematic scene...</div>
   <div id="loadingSpinner" class="loading-spinner"></div>
+
+  <canvas id="revealCanvas" style="display:none;"></canvas>
   <img id="resultImage" style="display:none;" alt="Generated movie scene">
-  <div class="action-buttons" style="display:none;" id="actionButtons">
+
+    <div class="action-buttons" style="display:none;" id="actionButtons">
     <button onclick="downloadImage()">Download Image</button>
     <button onclick="startOver()">Create Another</button>
   </div>
 </div>
  
-<script>
-  console.log("PAGE LOADED", new Date().toISOString());
- 
-  // STATE
-  let chosenWeapon = "";
-  let chosenTheme = "";
-  let chosenOutfit = "";
-  let chosenSidekick = "";
-  let isGenerating = false;
- 
-  // ELEMENTS
-  const video = document.getElementById('videoLive');
-  const screenCamera = document.getElementById('screenCamera');
-  const screenConfirm = document.getElementById('screenConfirm');
-  const screenWeapon = document.getElementById('screenWeapon');
-  const screenTheme = document.getElementById('screenTheme');
-  const screenOutfit = document.getElementById('screenOutfit');
-  const screenSidekick = document.getElementById('screenSidekick');
-  const screenResult = document.getElementById('screenResult');
- 
-  const photoPreview = document.getElementById('photoPreview');
-  const buttonTake = document.getElementById('buttonTake');
-  const buttonYes = document.getElementById('buttonYes');
-  const buttonNo = document.getElementById('buttonNo');
- 
-  const statusText = document.getElementById('statusText');
-  const loadingSpinner = document.getElementById('loadingSpinner');
-  const resultImage = document.getElementById('resultImage');
-  const actionButtons = document.getElementById('actionButtons');
- 
-  // CAMERA INIT
-  async function initCamera() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      video.srcObject = stream;
-    } catch (error) {
-      console.error("Camera error:", error);
-      alert("Unable to access camera. Please ensure you've granted camera permissions.");
-    }
-  }
-  initCamera();
- 
-  // TAKE PHOTO
-  buttonTake.addEventListener('click', () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0);
- 
-    const imageData = canvas.toDataURL('image/png');
-    sessionStorage.setItem('tempImage', imageData);
- 
-    photoPreview.src = imageData;
- 
-    screenCamera.classList.add('hidden');
-    screenConfirm.classList.remove('hidden');
-  });
- 
-  // CONFIRM PHOTO
-  buttonYes.addEventListener('click', () => {
-    sessionStorage.setItem('capturedImage', sessionStorage.getItem('tempImage'));
-    screenConfirm.classList.add('hidden');
-    screenWeapon.classList.remove('hidden');
-  });
- 
-  buttonNo.addEventListener('click', () => {
-    screenConfirm.classList.add('hidden');
-    screenCamera.classList.remove('hidden');
-  });
- 
-  // SELECTION MECHANIC
-  document.querySelectorAll('.optionContainer').forEach(option => {
-    option.addEventListener('click', function() {
-      const choiceType = this.getAttribute('data-choice');
-     
-      // Remove selected from all options of this type
-      document.querySelectorAll(`[data-choice="${choiceType}"]`).forEach(opt => {
-        opt.classList.remove('selected');
-      });
-     
-      // Add selected to clicked option
-      this.classList.add('selected');
-     
-      // Enable the corresponding button
-      const btnId = 'btn' + choiceType.charAt(0).toUpperCase() + choiceType.slice(1);
-      document.getElementById(btnId).disabled = false;
-    });
-  });
- 
-  // WEAPON
-  document.getElementById('btnWeapon').addEventListener('click', () => {
-    const selected = document.querySelector('[data-choice="weapon"].selected');
-    chosenWeapon = selected.getAttribute('data-value');
-    sessionStorage.setItem('weapon', chosenWeapon);
- 
-    screenWeapon.classList.add('hidden');
-    screenTheme.classList.remove('hidden');
-  });
- 
-  // THEME
-  document.getElementById('btnTheme').addEventListener('click', () => {
-    const selected = document.querySelector('[data-choice="theme"].selected');
-    chosenTheme = selected.getAttribute('data-value');
-    sessionStorage.setItem('theme', chosenTheme);
- 
-    screenTheme.classList.add('hidden');
-    screenOutfit.classList.remove('hidden');
-  });
- 
-  // OUTFIT
-  document.getElementById('btnOutfit').addEventListener('click', () => {
-    const selected = document.querySelector('[data-choice="outfit"].selected');
-    chosenOutfit = selected.getAttribute('data-value');
-    sessionStorage.setItem('outfit', chosenOutfit);
- 
-    screenOutfit.classList.add('hidden');
-    screenSidekick.classList.remove('hidden');
-  });
- 
-  // SIDEKICK (Final step - triggers generation)
-  document.getElementById('btnSidekick').addEventListener('click', () => {
-    if (isGenerating) return;
-   
-    const selected = document.querySelector('[data-choice="sidekick"].selected');
-    chosenSidekick = selected.getAttribute('data-value');
-    sessionStorage.setItem('sidekick', chosenSidekick);
- 
-    const prompt = generatePrompt(
-      chosenWeapon,
-      chosenTheme,
-      chosenOutfit,
-      chosenSidekick
-    );
- 
-    sessionStorage.setItem('prompt', prompt);
- 
-    screenSidekick.classList.add('hidden');
-    screenResult.classList.remove('hidden');
- 
-    // Start AI generation
-    submitToBackend(prompt);
-  });
- 
-  // PROMPT GENERATOR
-  function generatePrompt(weapon, theme, outfit, sidekick) {
-    return `A cinematic movie scene set in a ${theme} world.
-The main character wields a ${weapon}.
-They are dressed in a ${outfit}.
-Their loyal companion is a ${sidekick}.
-Use the captured face as a reference, not the starting frame.
-Dramatic lighting, dynamic camera movement, realistic textures,
-blockbuster film quality, 4K, shallow depth of field, epic atmosphere.`;
-  }
- 
-  // SUBMIT TO BACKEND (AI GENERATION)
-  async function submitToBackend(prompt) {
-    try {
-      isGenerating = true;
-     
-      // Reset UI
-      statusText.innerText = "Generating your cinematic scene...";
-      loadingSpinner.style.display = "block";
-      resultImage.style.display = "none";
-      actionButtons.style.display = "none";
- 
-      const dataUrl = sessionStorage.getItem("capturedImage");
-      if (!dataUrl) {
-        statusText.innerText = "Error: No photo found. Please start over.";
-        loadingSpinner.style.display = "none";
-        isGenerating = false;
-        return;
-      }
- 
-      // Convert dataURL to Blob
-      const response = await fetch(dataUrl);
-      const blob = await response.blob();
- 
-      const formData = new FormData();
-      formData.append("photo", blob, "capture.png");
-      formData.append("prompt", prompt);
- 
-      const apiResponse = await fetch("http://localhost:5000/api/submit", {
-        method: "POST",
-        body: formData
-      });
- 
-      const data = await apiResponse.json().catch(() => ({}));
-      console.log("Backend response:", data);
- 
-      if (!apiResponse.ok) {
-        statusText.innerText = "Generation failed: " + (data.error || `HTTP ${apiResponse.status}`);
-        loadingSpinner.style.display = "none";
-        isGenerating = false;
-        return;
-      }
- 
-      if (!data.image_url) {
-        statusText.innerText = "Error: No image received from server.";
-        loadingSpinner.style.display = "none";
-        isGenerating = false;
-        return;
-      }
- 
-      // Success! Display the image
-      statusText.innerText = "Your movie character is ready!";
-      loadingSpinner.style.display = "none";
-     
-      resultImage.src = "http://localhost:5000" + data.image_url;
-      resultImage.style.display = "block";
-      actionButtons.style.display = "block";
- 
-      sessionStorage.setItem("job_id", data.job_id || "");
-      sessionStorage.setItem("image_url", data.image_url);
- 
-    } catch (error) {
-      console.error("Generation error:", error);
-      statusText.innerText = "Failed to generate image: " + (error.message || error);
-      loadingSpinner.style.display = "none";
-    } finally {
-      isGenerating = false;
-    }
-  }
- 
-  // DOWNLOAD IMAGE
-  function downloadImage() {
-    const imageUrl = resultImage.src;
-    const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = 'my-movie-character.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
- 
-  // START OVER
-  function startOver() {
-    // Clear session storage
-    sessionStorage.clear();
-   
-    // Reset state
-    chosenWeapon = "";
-    chosenTheme = "";
-    chosenOutfit = "";
-    chosenSidekick = "";
-   
-    // Reset all selections
-    document.querySelectorAll('.optionContainer').forEach(opt => {
-      opt.classList.remove('selected');
-    });
-   
-    // Disable all next buttons
-    document.getElementById('btnWeapon').disabled = true;
-    document.getElementById('btnTheme').disabled = true;
-    document.getElementById('btnOutfit').disabled = true;
-    document.getElementById('btnSidekick').disabled = true;
-   
-    // Hide all screens except camera
-    screenConfirm.classList.add('hidden');
-    screenWeapon.classList.add('hidden');
-    screenTheme.classList.add('hidden');
-    screenOutfit.classList.add('hidden');
-    screenSidekick.classList.add('hidden');
-    screenResult.classList.add('hidden');
-    screenCamera.classList.remove('hidden');
-  }
-</script>
+<script src="main.js"></script>
 </body>
 </html>
