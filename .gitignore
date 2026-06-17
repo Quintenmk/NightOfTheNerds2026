@@ -1,0 +1,21 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Temporary visitor photos and generated results
+backend/uploads/*
+backend/results/*
+!backend/uploads/.gitkeep
+!backend/results/.gitkeep
+
+# Runtime output
+*.log
+__pycache__/
+*.py[cod]
+
+# Local environments and editor files
+.venv/
+venv/
+.edge-test/
+

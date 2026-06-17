@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Movie Scene Builder</title>
+  <title>Movie Poster Premiere</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
-<body>
+<body class="single-screen-page">
   <div class="container start-screen" id="screenStart">
     <div class="start-content">
       <img src="assets/hlopalka.png" class="clapperboard-behind" alt="Clapperboard">
@@ -31,162 +31,118 @@
 
   <div class="container hidden" id="screenCamera">
     <div class="screen-content camera-content">
-      <p class="screen-kicker">Casting call</p>
-      <h1 class="screen-title CameraText">Take your photo</h1>
-      <h2 class="screen-subtitle">Make sure your face is visible</h2>
-      <div class="camera-frame">
-        <video id="videoLive" autoplay playsinline></video>
+      <p class="screen-kicker">Photo time</p>
+      <h1 class="screen-title">Step into the frame</h1>
+      <p class="screen-subtitle">Check the live preview, then start the countdown.</p>
+      <div class="camera-frame kiosk-camera-frame">
+        <video id="videoLive" autoplay muted playsinline></video>
+        <div class="countdown-badge hidden" id="countdownBadge">10</div>
       </div>
-      <button id="buttonTake">Take Photo</button>
+      <p class="alignment-status" id="countdownStatus">Live preview ready</p>
+      <div class="button-row camera-actions">
+        <button id="buttonCameraBack" class="secondary-button">Back</button>
+        <button id="buttonStartCountdown">Start Countdown</button>
+      </div>
     </div>
   </div>
 
-  <div class="container hidden" id="screenConfirm">
+  <div class="container hidden" id="screenPhotoReview">
     <div class="screen-content camera-content">
-      <p class="screen-kicker">Final frame</p>
-      <h1 class="screen-title">Confirm Photo?</h1>
-      <img id="photoPreview" class="photo-preview" alt="Captured photo">
+      <p class="screen-kicker">Photo check</p>
+      <h1 class="screen-title">Use this photo?</h1>
+      <img id="mainPhotoPreview" class="photo-preview review-preview" alt="Captured photo">
       <div class="button-row">
-        <button id="buttonYes">Yes</button>
-        <button id="buttonNo" class="secondary-button">No</button>
+        <button id="buttonApprovePhoto">Yes</button>
+        <button id="buttonRetakePhoto" class="secondary-button">No</button>
       </div>
     </div>
   </div>
 
-  <div class="container hidden" id="screenWeapon">
-    <div class="screen-content">
-      <p class="screen-kicker">Scene 1 of 4</p>
-      <h1 class="screen-title">What kind of fighting style do you have?</h1>
-      <div class="grid">
-        <div class="optionContainer" data-choice="weapon" data-value="sword">
-          <h3>Sword</h3>
-          <p class="option">As a powerful warrior, that chooses to face his enemies head-on</p>
+  <div class="container hidden" id="screenWalkthrough">
+    <div class="screen-content walkthrough-content">
+      <p class="screen-kicker">How it works</p>
+      <div class="walkthrough-track">
+        <div class="walkthrough-step">
+          <div class="walkthrough-icon">1</div>
+          <span>Quiz</span>
         </div>
-
-        <div class="optionContainer" data-choice="weapon" data-value="gun">
-          <h3>Blaster</h3>
-          <p class="option">Showing no remorse, you want to annihilate your targets as quickly as possible</p>
+        <div class="walkthrough-line"></div>
+        <div class="walkthrough-step">
+          <div class="walkthrough-icon">2</div>
+          <span>Photo</span>
         </div>
-
-        <div class="optionContainer" data-choice="weapon" data-value="lightsaber and the force">
-          <h3>Force</h3>
-          <p class="option">Because of your interest in sci-fi, you got inspiration from a famous space movie with jedi's to fight your foes</p>
+        <div class="walkthrough-line"></div>
+        <div class="walkthrough-step">
+          <div class="walkthrough-icon">3</div>
+          <span>AI</span>
         </div>
-
-        <div class="optionContainer" data-choice="weapon" data-value="bow">
-          <h3>Bow</h3>
-          <p class="option">You fight with caution, keeping your enemies at a distance, and using your ranged expertise to eliminate them</p>
+        <div class="walkthrough-line"></div>
+        <div class="walkthrough-step">
+          <div class="walkthrough-icon">4</div>
+          <span>QR</span>
         </div>
       </div>
-      <button id="btnWeapon" disabled>Next</button>
+      <button id="buttonWalkthroughNext">Continue</button>
     </div>
   </div>
 
-  <div class="container hidden" id="screenTheme">
-    <div class="screen-content">
-      <p class="screen-kicker">Scene 2 of 4</p>
-      <h1 class="screen-title">Which location would describe your aesthetic?</h1>
-      <div class="grid">
-        <div class="optionContainer" data-choice="theme" data-value="Fairytale">
-          <h3>Fairytale</h3>
-          <p class="option">A peaceful forest, with fairy's flying around and birds singing</p>
-        </div>
-
-        <div class="optionContainer" data-choice="theme" data-value="Fantasy">
-          <h3>Fantasy</h3>
-          <p class="option">Soaring through the sky, amongst unicorns and dragons</p>
-        </div>
-
-        <div class="optionContainer" data-choice="theme" data-value="Action">
-          <h3>Action</h3>
-          <p class="option">You prefer the city life, with bustling streets and a vibrant, energetic atmosphere</p>
-        </div>
-
-        <div class="optionContainer" data-choice="theme" data-value="Underwater">
-          <h3>Underwater</h3>
-          <p class="option">Escaping the ordinary life, you choose to swim beside fish and mermaids</p>
-        </div>
+  <div class="container hidden" id="screenPartySize">
+    <div class="screen-content party-content">
+      <p class="screen-kicker">Cast size</p>
+      <h1 class="screen-title">
+        <span class="title-white">How many people</span>
+        <span class="title-gold">are in the picture?</span>
+      </h1>
+      <div class="party-size-control">
+        <button id="buttonPartyMinus" type="button" aria-label="Decrease party size">-</button>
+        <input id="partySizeInput" type="number" min="1" max="8" value="1" inputmode="numeric" aria-label="Party size">
+        <button id="buttonPartyPlus" type="button" aria-label="Increase party size">+</button>
       </div>
-      <button id="btnTheme" disabled>Next</button>
+      <div class="button-row">
+        <button id="buttonPartyBack" class="secondary-button">Back</button>
+        <button id="buttonPartyNext">Continue</button>
+      </div>
     </div>
   </div>
 
-  <div class="container hidden" id="screenOutfit">
+  <div class="container hidden" id="screenQuiz">
     <div class="screen-content">
-      <p class="screen-kicker">Scene 3 of 4</p>
-      <h1 class="screen-title">If you would appear in public as a hero, how will you dress yourself?</h1>
-      <div class="grid">
-        <div class="optionContainer" data-choice="outfit" data-value="Hooded outfit">
-          <h3>Hooded</h3>
-          <p class="option">Mysterious and ominous</p>
-        </div>
-
-        <div class="optionContainer" data-choice="outfit" data-value="Superhero cape, with muscles">
-          <h3>Cape</h3>
-          <p class="option">Strong, brave and charming</p>
-        </div>
-
-        <div class="optionContainer" data-choice="outfit" data-value="Futuristic suit with technology">
-          <h3>Tech Suit</h3>
-          <p class="option">Futuristic and geared up with technology</p>
-        </div>
-
-        <div class="optionContainer" data-choice="outfit" data-value="Suit with tie, and brown trousers">
-          <h3>Undercover</h3>
-          <p class="option">Ordinary, blending in with the rest</p>
-        </div>
+      <p class="screen-kicker" id="quizKicker">Scene 1</p>
+      <h1 class="screen-title" id="quizQuestion">Which genre movie do you want to be in?</h1>
+      <div class="grid" id="quizOptions"></div>
+      <div class="button-row quiz-nav">
+        <button id="btnQuizBack" class="secondary-button" disabled>Back</button>
+        <button id="btnQuizNext" disabled>Next</button>
       </div>
-      <button id="btnOutfit" disabled>Next</button>
-    </div>
-  </div>
-
-  <div class="container hidden" id="screenSidekick">
-    <div class="screen-content">
-      <p class="screen-kicker">Scene 4 of 4</p>
-      <h1 class="screen-title">What animal would be your ideal sidekick?</h1>
-      <div class="grid">
-        <div class="optionContainer" data-choice="sidekick" data-value="Eagle">
-          <h3>Eagle</h3>
-          <p class="option">An eagle, that can fly you around and peck enemies</p>
-        </div>
-
-        <div class="optionContainer" data-choice="sidekick" data-value="Wolf">
-          <h3>Wolf</h3>
-          <p class="option">A wolf, which can chomp enemies and trace every sense of life</p>
-        </div>
-
-        <div class="optionContainer" data-choice="sidekick" data-value="Snake">
-          <h3>Snake</h3>
-          <p class="option">A snake, who stays close to you and keeps enemies on distance with his scary fangs</p>
-        </div>
-
-        <div class="optionContainer" data-choice="sidekick" data-value="Horse">
-          <h3>Horse</h3>
-          <p class="option">A horse, to traverse the world elegantly and show your pride</p>
-        </div>
-      </div>
-      <button id="btnSidekick" disabled>Next</button>
     </div>
   </div>
 
   <div class="container hidden" id="screenResult">
     <div class="screen-content result-content">
       <p class="screen-kicker">Premiere night</p>
-      <h1 class="screen-title">Your Movie Character</h1>
+      <h1 class="screen-title">Your Movie Poster</h1>
       <div class="result-stage">
-        <div id="statusText">Generating your cinematic scene...</div>
-        <div id="loadingSpinner" class="loading-spinner"></div>
-        <canvas id="revealCanvas" style="display:none;"></canvas>
-        <img id="resultImage" style="display:none;" alt="Generated movie scene">
-      </div>
+        <div class="ai-frame">
+          <div class="ai-loading-overlay">
+            <div id="loadingSpinner" class="loading-spinner"></div>
+            <div id="statusText">Generating your cinematic scene...</div>
+          </div>
+          <canvas id="revealCanvas" style="display:none;"></canvas>
+          <img id="resultImage" style="display:none;" alt="Generated movie scene">
+        </div>
 
-      <div class="action-buttons" style="display:none;" id="actionButtons">
-        <button onclick="downloadImage()">Download Image</button>
-        <button onclick="startOver()" class="secondary-button">Create Another</button>
+        <div class="action-buttons" style="display:none;" id="actionButtons">
+          <div class="qr-panel">
+            <img id="qrCodeImage" alt="QR code for generated image">
+            <p class="qr-caption">Scan to open your image</p>
+          </div>
+          <button onclick="startOver()" class="secondary-button">Next Person</button>
+        </div>
       </div>
     </div>
   </div>
 
+  <script src="config.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
